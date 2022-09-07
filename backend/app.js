@@ -2,9 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require("dotenv")
+const path = require('path');
 dotenv.config();
 
-// const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user');
 
 mongoose.connect(process.env.BDD_URL,
   { useNewUrlParser: true,
@@ -23,8 +24,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-// app.use('/api/auth', userRoutes);
-// app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api/auth', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
 
