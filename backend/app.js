@@ -24,10 +24,9 @@ app.use(cors());
 //     next();
 //   });
 
-// app.use('/api/sauces', (req, res, next) => {
-//   console.log('Requête reçue !');
-//   next();
-// });
+app.use('/api/sauces', (req, res, next) => {
+  next();
+});
 
 app.use(bodyParser.json());
 
