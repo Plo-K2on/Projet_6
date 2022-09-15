@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require("dotenv")
 const path = require('path');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 dotenv.config();
 
 const userRoutes = require('./routes/user');
@@ -23,10 +24,6 @@ app.use(cors());
 //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 //     next();
 //   });
-
-app.use('/api/sauces', (req, res, next) => {
-  next();
-});
 
 app.use(bodyParser.json());
 
