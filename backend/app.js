@@ -7,6 +7,7 @@ const cors = require('cors');
 dotenv.config();
 
 const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce.js');
 
 mongoose.connect(process.env.BDD_URL,
   { useNewUrlParser: true,
