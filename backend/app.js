@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const dotenv = require("dotenv")
 const path = require('path');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
 dotenv.config();
 
 const userRoutes = require('./routes/user');
