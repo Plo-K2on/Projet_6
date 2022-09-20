@@ -1,4 +1,3 @@
-// const sauce = ('../controllers/sauce')
 
 exports.sauceCtrl = (req, res, next) => {
     Thing.find().then(
