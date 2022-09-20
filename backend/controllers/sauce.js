@@ -1,8 +1,9 @@
+const sauce = require('../routes/sauce');
 
 exports.sauceCtrl = (req, res, next) => {
-    Thing.find().then(
-      (things) => {
-        res.status(200).json(things);
+    sauce.find().then(
+      (sauce) => {
+        res.status(200).json(sauce);
       }
     ).catch(
       (error) => {
