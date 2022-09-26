@@ -1,9 +1,9 @@
-const sauce = require('../routes/sauce');
+const Sauce = require('../models/sauce');
 
-exports.sauceCtrl = (req, res, next) => {
-    sauce.find().then(
-      (sauce) => {
-        res.status(200).json(sauce);
+exports.allSauces = (req, res, next) => {
+    Sauce.find().then(
+      (sauces) => {
+        res.status(200).json(sauces);
       }
     ).catch(
       (error) => {
