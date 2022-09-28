@@ -6,7 +6,7 @@ const path = require('path');
 const cors = require('cors');
 dotenv.config();
 
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user.js');
 const sauceRoutes = require('./routes/sauce.js');
 
 mongoose.connect(process.env.BDD_URL,
