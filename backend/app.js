@@ -25,8 +25,18 @@ app.use(cors());
 //     next();
 //   });
 
+app.post('/api/sauce', (req, res, next) => {
+  console.log(req.body);
+  const thing = new Thing({
+    ...req.body
+  });
+  thing.save()
+    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .catch(error => res.status(400).json({ error }));
+});
+
 app.use(bodyParser.json());
-app.use('/api/sauce', sauceRoutes);
+app.use('/api/sauces', sauceRoutes);
 
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
