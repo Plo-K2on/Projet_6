@@ -21,8 +21,9 @@ exports.allSauces = (req, res, next) => {
 
 
 exports.createPost = (req, res, next) => {
-  console.log('req.body', req.body);
-  const thingObject = JSON.parse(req.body.thing);
+  
+  const sauceObject = JSON.parse(req.body.sauce);
+  console.log(sauceObject)
   // delete thingObject._id;
   // delete thingObject._userId;
     // const thing = new Thing({

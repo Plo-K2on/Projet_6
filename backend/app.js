@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require("dotenv")
 const path = require('path');
 const cors = require('cors');
+const formData = require('express-form-data');
 dotenv.config();
 
 const userRoutes = require('./routes/user.js');
@@ -16,6 +17,7 @@ mongoose.connect(process.env.BDD_URL,
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+app.use(formData.parse());
 app.use(cors());
 
 // app.use((req, res, next) => {
@@ -26,7 +28,7 @@ app.use(cors());
 //   });
 
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
