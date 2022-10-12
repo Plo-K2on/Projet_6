@@ -46,9 +46,5 @@ exports.login  = (req, res, next) => {
             res.status(500).json( {error} );
         })
 };
-
-
-// app.use('/api/sauces', (req, res, next) => {
-//     next();
-//   });  
+  
 const jwt = require('jsonwebtoken');
