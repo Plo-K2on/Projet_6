@@ -33,15 +33,15 @@ exports.createPost = (req, res, next) => {
 
     const sauce = new Sauce({
       ...sauceObject,
-      // userId: req.auth.userId,
-      // imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      userId: req.body.userId,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.filename}`
     
     });
 
-    // thing.save()
-    // .then(() => {res.status(201).json({message: 'Objet enregistrée'})})
-    // .catch(error => { res.status(400).json( { error})}) 
-    // res.status(201).json({});
+    sauceObject.save()
+    .then(() => {res.status(201).json({message: 'Objet enregistrée'})})
+    .catch(error => { res.status(400).json( { error})}) 
+    res.status(201).json({});
 
   };
 
