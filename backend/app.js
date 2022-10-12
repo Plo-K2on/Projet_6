@@ -28,7 +28,8 @@ app.use(cors());
 //   });
 
 
-// app.use(bodyParser.json());
+app.use(bodyParser.json()); // Commande qui bloque la connexion au site
+
 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
