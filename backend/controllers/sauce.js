@@ -42,7 +42,7 @@ exports.createPost = (req, res, next) => {
     .then(() => {res.status(201).json({message: 'Objet enregistrée'})})
     .catch(error => { res.status(400).json( { error})}) 
     res.status(201).json({});
-
+    
   };
 
   // Grace aux infos envoyé par le Front stocké dans req, enregistrer ses infos en base
