@@ -24,7 +24,8 @@ exports.createPost = (req, res, next) => {
   
   const sauceObject = JSON.parse(req.body.sauce);
   // console.log(sauceObject);
-  
+  console.log('req.body.sauce', req.body.sauce);
+  console.log('sauceObject', sauceObject);
 
   // delete sauceObject._id; // pas besoin ici
 
@@ -33,15 +34,17 @@ exports.createPost = (req, res, next) => {
 
     const sauce = new Sauce({
       ...sauceObject,
-      userId: req.body.userId,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.filename}`
-    
+      userId: sauceObject.userId,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.images}`
     });
 
-    sauceObject.save()
-    .then(() => {res.status(201).json({message: 'Objet enregistrée'})})
-    .catch(error => { res.status(400).json( { error})}) 
-    res.status(201).json({});
+    sauce.save()
+    .then(() => {
+      res.status(201).json({message: 'Objet enregistrée'})
+    })
+    .catch(error => {
+      res.status(400).json( { error})
+    }) 
     
   };
 
