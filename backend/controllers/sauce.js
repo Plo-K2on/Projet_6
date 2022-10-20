@@ -24,8 +24,9 @@ exports.createPost = (req, res, next) => {
   
   const sauceObject = JSON.parse(req.body.sauce);
   // console.log(sauceObject);
-  console.log('req.body.sauce', req.body.sauce);
-  console.log('sauceObject', sauceObject);
+  // console.log('req.body.sauce', req.body.sauce);
+  // console.log('sauceObject', sauceObject);
+  console.log('req image', req.files.image);
 
   // delete sauceObject._id; // pas besoin ici
 
@@ -35,7 +36,7 @@ exports.createPost = (req, res, next) => {
     const sauce = new Sauce({
       ...sauceObject,
       userId: sauceObject.userId,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.images}`
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.files.image.path}`
     });
 
     sauce.save()
