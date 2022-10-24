@@ -14,19 +14,14 @@ exports.allSauces = (req, res, next) => {
   );
 };
 
-exports.createPost = (req, res, next) => {
-//   console.log('req.body', req.body);
-  res.status(201).json({test:'test'});
-};
 
-
-exports.createPost = (req, res, next) => {
-  
+exports.createSauce = (req, res, next) => {
+  console.log('test controlleur')
   const sauceObject = JSON.parse(req.body.sauce);
-  // console.log(sauceObject);
+  console.log(sauceObject);
   // console.log('req.body.sauce', req.body.sauce);
   // console.log('sauceObject', sauceObject);
-  console.log('req image', req.files.image);
+  // console.log('req image', req.files.image.name);
 
   // delete sauceObject._id; // pas besoin ici
 
@@ -36,7 +31,7 @@ exports.createPost = (req, res, next) => {
     const sauce = new Sauce({
       ...sauceObject,
       userId: sauceObject.userId,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.files.image.path}`
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.files.image.name}`
     });
 
     sauce.save()
