@@ -16,22 +16,12 @@ exports.allSauces = (req, res, next) => {
 
 
 exports.createSauce = (req, res, next) => {
-  console.log('test controlleur')
   const sauceObject = JSON.parse(req.body.sauce);
-  console.log(sauceObject);
-  // console.log('req.body.sauce', req.body.sauce);
-  // console.log('sauceObject', sauceObject);
-  // console.log('req image', req.files.image.name);
-
-  // delete sauceObject._id; // pas besoin ici
-
-  // créer un objet sauce qu'on va enregistrer en base ayant pour valeurs les éléments
-  // envoyés par le front contenu dans ma constante sauceObject.
-
+  // console.log(req.file);
     const sauce = new Sauce({
       ...sauceObject,
       userId: sauceObject.userId,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.files.image.name}`
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
 
     sauce.save()
