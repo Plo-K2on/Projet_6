@@ -17,7 +17,6 @@ exports.allSauces = (req, res, next) => {
 
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
-  // console.log(req.file);
     const sauce = new Sauce({
       ...sauceObject,
       userId: sauceObject.userId,
@@ -31,8 +30,58 @@ exports.createSauce = (req, res, next) => {
     .catch(error => {
       res.status(400).json( { error})
     }) 
-    
   };
 
-  // Grace aux infos envoyé par le Front stocké dans req, enregistrer ses infos en base
-  // Faire un console.log de req pour les infos
+exports.getOneSauce = (req, res, next) => {
+  Sauce.findOne({
+    _id: req.sauces.id
+  }).then(
+    (sauce) => {
+      res.status(200).json(sauce);
+    }
+  ).catch(
+    (error) => {
+      res.status(404).json({
+        error: error
+      });
+    }
+  );
+};
+
+exports.modifySauce = (req, res, next) => {
+  const sauceObject = req.file ? {
+    ...JSON.parse(req.body.sauce),
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : { ...req.body };
+
+  delete sauceObject._userId;
+  Sauce.findOne({_id: req.params.id})
+  .then((sauce) => {
+    if (sauce.userId != req.auth.userId) {
+      res.status(401).json({ message: 'non autorisée'});
+    } else {
+      Sauce.updateOne({_id: req.params.id}, { ...sauceObject, _id: req.params.id})
+      .then(() => res.status(200).json({message : 'Objet modifié!'}))
+      .catch(error => res.status(401).json({ error }));
+    }
+  })
+  .catch((error) => {
+    res.status(400).json({ error })
+  })
+};
+
+exports.deleteSauce = (req, res, next) => {
+  Sauce.deleteOne({_id: req.params.id}).then(
+    () => {
+      res.status(200).json({
+        message: 'Deleted!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error
+      });
+    }
+  );
+};

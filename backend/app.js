@@ -10,9 +10,6 @@ const cors = require('cors');
 dotenv.config();
 const app = express();
 
-
-
-
 mongoose.connect(process.env.BDD_URL,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -37,7 +34,6 @@ app.use(express.json());
 
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
-
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
