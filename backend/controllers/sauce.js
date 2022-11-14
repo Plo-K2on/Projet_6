@@ -34,7 +34,7 @@ exports.createSauce = (req, res, next) => {
 
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({
-    _id: req.sauces.id
+    _id: req.params.id
   }).then(
     (sauce) => {
       res.status(200).json(sauce);
@@ -53,17 +53,20 @@ exports.modifySauce = (req, res, next) => {
     ...JSON.parse(req.body.sauce),
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   } : { ...req.body };
-
-  delete sauceObject._userId;
-  Sauce.findOne({_id: req.params.id})
+console.log('modify', req.params.id)
+  // delete sauceObject._userId;
+  Sauce.findOne({
+    _id: req.params.id
+  })
   .then((sauce) => {
-    if (sauce.userId != req.auth.userId) {
-      res.status(401).json({ message: 'non autorisée'});
-    } else {
+    console.log('sauce', sauce)
+    // if (sauce.userId !== req.auth.userId) {
+    //   res.status(401).json({ message: 'non autorisée'});
+    // } else {
       Sauce.updateOne({_id: req.params.id}, { ...sauceObject, _id: req.params.id})
       .then(() => res.status(200).json({message : 'Objet modifié!'}))
       .catch(error => res.status(401).json({ error }));
-    }
+    // }
   })
   .catch((error) => {
     res.status(400).json({ error })
