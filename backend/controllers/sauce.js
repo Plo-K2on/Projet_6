@@ -14,7 +14,6 @@ exports.allSauces = (req, res, next) => {
   );
 };
 
-
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
     const sauce = new Sauce({
@@ -104,20 +103,25 @@ exports.likeSauce = (req, res, next) => {
   // console.log('id', req.params)
   Sauce.findOne({_id: req.params.id}).then(
     () => {
-      if (req.body.like === 1) {
-        console.log('utilisareur aime')
+      if (req.body.like === 1){
+        //  console.log('user aime')
+        Sauce.updateOne([sauce.userId == usersLiked])
         // on enregistre l'userId dans le tableau usersliked de l'objet Sauce
         // on incrémente le compteur likes de l'objet Sauce
         } else if(req.body.like === -1){
-          console.log('user aime pas')
-          // on enregistre l'userId dans le tableau usersDisLiked de l'objet Sauce
+          // console.log('user aime pas')
+          Sauce.updateOne([usersDisliked])
+        // on enregistre l'userId dans le tableau usersDisLiked de l'objet Sauce
         // on incrémente le compteur dislikes de l'objet Sauce
         } else if (req.body.like === 0){
-          console.log('user annule son like/dislike')
+          // console.log('user annule son like/dislike')
         }
-      res.status(200).json({
-        message: 'Like'
-      });
+        // Sauce.updateOne({_id: req.body.like}, { ...sauceObject, _id: req.body.like})
+        // .then(() => res.status(200).json({message : 'like/dislike enregistrée'}))
+        // .catch(error => res.status(401).json({ error }));
+        // res.status(200).json({
+        //   message: 'Like'
+        // });
     }
   ).catch(
     (error) => {
