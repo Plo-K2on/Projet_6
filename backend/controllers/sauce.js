@@ -62,7 +62,12 @@ console.log('modify', req.params.id)
     if (sauce.userId !== req.auth.userId) {
       res.status(401).json({ message: 'non autorisée'});
     } else {
-      Sauce.updateOne({_id: req.params.id}, { ...sauceObject, _id: req.params.id})
+      Sauce.updateOne(
+          {_id: req.params.id},
+          { ...sauceObject, 
+            _id: req.params.id
+          }
+        )
       .then(() => res.status(200).json({message : 'Objet modifié!'}))
       .catch(error => res.status(401).json({ error }));
     }
@@ -99,37 +104,55 @@ exports.deleteSauce = (req, res, next) => {
   // renvoyer un message  et un status 200 si tout est ok sinon status 400
 
 exports.likeSauce = (req, res, next) => {
-  // console.log('id', req.params.id)
-  // console.log('id', req.params)
-  Sauce.findOne({_id: req.params.id}).then(
-    () => {
-      if (req.body.like === 1){
-        //  console.log('user aime')
-        Sauce.updateOne([sauce.userId == usersLiked])
-        // on enregistre l'userId dans le tableau usersliked de l'objet Sauce
-        // on incrémente le compteur likes de l'objet Sauce
-        } else if(req.body.like === -1){
-          // console.log('user aime pas')
-          Sauce.updateOne([usersDisliked])
-        // on enregistre l'userId dans le tableau usersDisLiked de l'objet Sauce
-        // on incrémente le compteur dislikes de l'objet Sauce
-        } else if (req.body.like === 0){
-          // console.log('user annule son like/dislike')
-        }
-        // Sauce.updateOne({_id: req.body.like}, { ...sauceObject, _id: req.body.like})
-        // .then(() => res.status(200).json({message : 'like/dislike enregistrée'}))
-        // .catch(error => res.status(401).json({ error }));
-        // res.status(200).json({
-        //   message: 'Like'
-        // });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
+  const sauceId = req.params.id;
+  const userId = req.body.userId;
+  const likeAction = req.body.like
+
+  // $push = syntaxe de mongoose, voir doc
+  // $inc = sintaxe de mongoose, voir doc
+
+  if (likeAction === 1){
+    Sauce.updateOne({_id: sauceId}, {
+      $push: {usersLiked: userId}, 
+      $inc: {likes: +1}
+    })
+    .then(() => res.status(200).json({message: "J'aime"}))
+    .catch((error)=>res.status(400).json({error}))
+  }
+
+
+
+  // Sauce.findOne({_id: req.params.id}).then(
+  //   () => {
+  //     if (req.body.like === 1){
+  //       //  console.log('user aime')
+        
+  //       // on enregistre l'userId dans le tableau usersliked de l'objet Sauce
+  //       // on incrémente le compteur likes de l'objet Sauce
+  //       } else if(req.body.like === -1){
+  //         // console.log('user aime pas')
+        
+  //       // on enregistre l'userId dans le tableau usersDisLiked de l'objet Sauce
+  //       // on incrémente le compteur dislikes de l'objet Sauce
+  //       } else if (req.body.like === 0){
+  //         // console.log('user annule son like/dislike')
+  //       }
+
+  //       // Sauce.updateOne({_id: req.body.like}, { ...sauceObject, _id: req.body.like})
+  //       // .then(() => res.status(200).json({message : 'like/dislike enregistrée'}))
+  //       // .catch(error => res.status(401).json({ error }));
+  //       // res.status(200).json({
+  //       //   message: 'Like'
+  //       // });
+        
+  //   }
+  // ).catch(
+  //   (error) => {
+  //     res.status(400).json({
+  //       error: error
+  //     });
+  //   }
+  // );
 
   // res.status(400).json({
   //   error: error
