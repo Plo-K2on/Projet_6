@@ -106,10 +106,12 @@ exports.deleteSauce = (req, res, next) => {
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const userId = req.body.userId;
-  const likeAction = req.body.like
+  const likeAction = req.body.like;
+  const isInArray = [+1, -1, 0]
 
   // $push = syntaxe de mongoose, voir doc
-  // $inc = sintaxe de mongoose, voir doc
+  // $inc = syntaxe de mongoose, voir doc
+  console.log('likeAction', likeAction)
 
   if (likeAction === 1){
     Sauce.updateOne({_id: sauceId}, {
@@ -118,7 +120,57 @@ exports.likeSauce = (req, res, next) => {
     })
     .then(() => res.status(200).json({message: "J'aime"}))
     .catch((error)=>res.status(400).json({error}))
-  }
+
+  } else if (likeAction === -1) {
+    // on enregistre l'userId dans le tableau usersDisLiked de l'objet Sauce
+    // on incrémente le compteur dislikes de l'objet Sauce
+    Sauce.updateOne({_id: sauceId}, {
+      $push: {usersDisliked: userId}, 
+      $inc: {dislikes: +1}
+    })
+    .then(() => res.status(200).json({message: "J'aime pas"}))
+    .catch((error)=>res.status(400).json({error}))
+
+
+  } else if (likeAction === 0) {
+    // récupérer le tableau userDislike
+    // créeer une variable nommé isUserDislike
+    // vérifier si l'userId est présent dans le tableau usersDisliked et l'affecter a la variable isUserDislike
+    // si isUserDislike est vrai
+      // alors
+      // on supprime l'userId du tableau usersDisliked
+      // on décrémente le tableau disliked
+      // on (sauvegarde) et on met a jour
+      // renvoyer une réponse au front (vérifier le brief si il faut une réponse normalisé ou pas)
+
+      ///////////////////////////////////////////
+  } 
+  
+  // if (usersLiked.includes[isInArray]) {
+  //   Sauce.updateOne({_id: sauceId}, {
+  //     $push: {usersLiked: userId}, 
+  //     $inc: {likes: -1},
+  // })
+    // si c'est dans usersLiked
+      // alors j'enleve l'userId du tableau usersLiked
+      // et je décrémente le compteur likes
+      // je met a jour ensuite l'objet en base
+ };
+
+  // if (usersDisliked.includes[isInArray]) {
+  //   Sauce.updateOne({_id: sauceId}, {
+  //     $push: {usersDisliked: userId},
+  //     $inc: {likes: -1},
+  //   })
+    // sinon si c'est dans usersDislked
+      // alors j'enleve l'userId du tableau usersDisliked
+      // et je décrémente le compteur dislikes
+      // je met a jour ensuite l'objet en base
+  //}};
+
+
+
+
 
 
 
@@ -157,5 +209,3 @@ exports.likeSauce = (req, res, next) => {
   // res.status(400).json({
   //   error: error
   // });
-};
-
