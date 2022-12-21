@@ -107,7 +107,8 @@ exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const userId = req.body.userId;
   const likeAction = req.body.like;
-  const isInArray = [+1, -1, 0]
+  // const isInArray = [+1, -1, 0]
+ 
 
   // $push = syntaxe de mongoose, voir doc
   // $inc = syntaxe de mongoose, voir doc
@@ -129,32 +130,64 @@ exports.likeSauce = (req, res, next) => {
       $inc: {dislikes: +1}
     })
     .then(() => res.status(200).json({message: "J'aime pas"}))
-    .catch((error)=>res.status(400).json({error}))
+    .catch((error) => res.status(400).json({error}))
 
 
   } else if (likeAction === 0) {
-    // récupérer le tableau userDislike
-    // créeer une variable nommé isUserDislike
-    // vérifier si l'userId est présent dans le tableau usersDisliked et l'affecter a la variable isUserDislike
-    // si isUserDislike est vrai
-      // alors
-      // on supprime l'userId du tableau usersDisliked
-      // on décrémente le tableau disliked
-      // on (sauvegarde) et on met a jour
-      // renvoyer une réponse au front (vérifier le brief si il faut une réponse normalisé ou pas)
+    
+    Sauce.findOne({
+      _id: sauceId
+    }).then(
+      (sauce) => {
+        // récupérer le tableau userDislike
+        const Sauce = sauce.findOne ([usersDisliked]);
+        console.log ('tableau', usersDisliked)
+        // console.log('sauce', sauce)
+        // console.log('userLike', sauce.usersLiked)
+        // console.log('userDislike', sauce.usersDisliked)
+        
+        
 
-      ///////////////////////////////////////////
+        // vérifier si l'userId est présent dans le tableau usersDisliked et l'affecter a la variable isUserDislike
+        // const isUserInDisliked = MON_tableau.includes(mon id a vérifier)
+          //  const isUserInDisliked = usersDisliked.includes (_id)
+          //  console.log ('userDislike', usersDisliked)
+        // const isUserInLiked = MON_tableau.includes(mon id a vérifier)
+          //  const isUserInLiked = usersLiked.includes (_id)
+          //  console.log('userLike', usersLiked)
+        // faire un console log de ces 2 valeurs pour vérifier que l'un soit a true
+        // si isUserInDisliked est vrai
+          // alors
+          // on supprime l'userId du tableau usersDisliked
+          // on décrémente le tableau disliked
+          // on (sauvegarde) et on met a jour
+          // renvoyer une réponse au front (vérifier le brief si il faut une réponse normalisé ou pas)
+
+        // si c'est dans isUserInLiked
+          // alors j'enleve l'userId du tableau usersLiked
+          // et je décrémente le compteur likes
+          // je met a jour ensuite l'objet en base
+          // on (sauvegarde) et on met a jour
+          // renvoyer une réponse au front (vérifier le brief si il faut une réponse normalisé ou pas)
+      }
+    ).catch(
+      (error) => {
+        res.status(404).json({
+          error: error
+        });
+      }
+    );
   } 
+      
+      ///////////////////////////////////////////
+
   
   // if (usersLiked.includes[isInArray]) {
   //   Sauce.updateOne({_id: sauceId}, {
   //     $push: {usersLiked: userId}, 
   //     $inc: {likes: -1},
   // })
-    // si c'est dans usersLiked
-      // alors j'enleve l'userId du tableau usersLiked
-      // et je décrémente le compteur likes
-      // je met a jour ensuite l'objet en base
+
  };
 
   // if (usersDisliked.includes[isInArray]) {
