@@ -150,11 +150,13 @@ exports.likeSauce = (req, res, next) => {
 
         // vérifier si l'userId est présent dans le tableau usersDisliked et l'affecter a la variable isUserDislike
         // const isUserInDisliked = MON_tableau.includes(mon id a vérifier)
-          //  const isUserInDisliked = usersDisliked.includes (_id)
+          //  const isUserInDisliked = usersDisliked.includes (sauceId)
           //  console.log ('userDislike', usersDisliked)
+
         // const isUserInLiked = MON_tableau.includes(mon id a vérifier)
-          //  const isUserInLiked = usersLiked.includes (_id)
+          //  const isUserInLiked = usersLiked.includes (sauceId)
           //  console.log('userLike', usersLiked)
+          
         // faire un console log de ces 2 valeurs pour vérifier que l'un soit a true
         // si isUserInDisliked est vrai
           // alors
