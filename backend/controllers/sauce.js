@@ -139,18 +139,26 @@ exports.likeSauce = (req, res, next) => {
       _id: sauceId
     }).then(
       (sauce) => {
-        // récupérer le tableau userDislike
-        const Sauce = sauce.findOne ([usersDisliked]);
-        console.log ('tableau', usersDisliked)
-        // console.log('sauce', sauce)
-        // console.log('userLike', sauce.usersLiked)
-        // console.log('userDislike', sauce.usersDisliked)
-        
-        
-
+        console.log('usesDisliked', sauce.usersDisliked)
+ 
       
         // vérifier si l'userId est présent dans le tableau usersDisliked et l'affecter a la variable isUserDislike
         // const isUserInDisliked = MON_tableau.includes(mon id a vérifier)
+        const isUserIdIsInDisliked = sauce.usersDisliked.includes(userId);
+        const isUserIdIsInLiked = sauce.usersLiked.includes(userId);
+        console.log('isUserIdIsInDisliked', isUserIdIsInDisliked)
+        console.log('isUserIdIsInLiked', isUserIdIsInLiked)
+
+        if (isUserIdIsInDisliked === true) { 
+          Sauce.updateOne({_id: sauceId}, {
+            $pull: {usersDisliked: userId}, 
+            $inc: {dislikes: -1}
+          }).then(()=> res.status(200).json({message: "annulation du dislike"}))
+            .catch((error)=> res.status(400).json({error}))
+        
+        }
+
+
           //  const isUserInDisliked = usersDisliked.includes (sauceId)
           //  console.log ('userDislike', usersDisliked)
 
@@ -175,7 +183,7 @@ exports.likeSauce = (req, res, next) => {
       }
     ).catch(
       (error) => {
-        res.status(404).json({
+        res.status(400).json({
           error: error
         });
       }
