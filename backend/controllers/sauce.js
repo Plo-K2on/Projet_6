@@ -1,4 +1,6 @@
 const Sauce = require('../models/sauce.js');
+const jwt = require('jsonwebtoken');
+
 
 exports.allSauces = (req, res, next) => {
   Sauce.find().then(
@@ -48,6 +50,19 @@ exports.getOneSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+  const decodedUserId = decodedToken.userId;
+
+  if (this.modifySauce === true) {
+    Sauce.findOne({
+      _id: sauceId
+    }).then(
+      (sauce) => {
+        (decodedUserId === sauce.userId) 
+      }
+    )}
+
   const sauceObject = req.file ? {
     ...JSON.parse(req.body.sauce),
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
@@ -77,6 +92,22 @@ console.log('modify', req.params.id)
 };
 
 exports.deleteSauce = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+  const decodedUserId = decodedToken.userId;
+
+  /// faire un findOne comme dans likeaction === 0
+  // dans le then du findOne on met une conditionnelle pour vérifier si le decodedUserId === sauce.userId
+
+if (this.deleteSauce === true) {
+  Sauce.findOne({
+    _id: sauceId
+  }).then(
+    (sauce) => {
+      (decodedUserId === sauce.userId) 
+    }
+  )}
+
   Sauce.deleteOne({_id: req.params.id}).then(
     () => {
       res.status(200).json({
@@ -133,7 +164,7 @@ exports.likeSauce = (req, res, next) => {
 
         } else if (isUserIdIsInLiked === true) {
           Sauce.updateOne({_id: sauceId}, {
-            $pull: {isUserIdIsInLiked: userId}, 
+            $pull: {usersLiked: userId}, 
             $inc: {likes: -1}
           }).then(()=> res.status(200).json({message: "annulation du like"}))
             .catch((error)=> res.status(400).json({error}))
