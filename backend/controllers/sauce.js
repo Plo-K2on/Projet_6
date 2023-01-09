@@ -50,84 +50,113 @@ exports.getOneSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
+  const sauceId = req.params.id;
   const token = req.headers.authorization.split(' ')[1];
   const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
   const decodedUserId = decodedToken.userId;
 
-  if (this.modifySauce === true) {
     Sauce.findOne({
       _id: sauceId
     }).then(
       (sauce) => {
-        (decodedUserId === sauce.userId) 
-      }
-    )}
+        // if (this.modifySauce === true) {}
+        // (decodedUserId === sauce.userId)
+        const sauceObject = req.file ? {
+              ...JSON.parse(req.body.sauce),
+              imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            } : { ...req.body };
+          // console.log('modify', req.params.id)
+            Sauce.findOne({
+              _id: req.params.id
+            })
+            .then((sauce) => {
+              // console.log('sauce', sauce)
+              if (sauce.userId !== req.auth.userId) {
+                res.status(401).json({ message: 'non autorisée'});
+              } else {
+                Sauce.updateOne(
+                    {_id: req.params.id},
+                    { ...sauceObject, 
+                      _id: req.params.id
+                    }
+                  )
+                .then(() => {
+                  if (this.modifySauce === true){
+                    if (decodedUserId === sauce.userId){
+                      res.status(200).json({message : 'Objet modifié!'})
+                    }
+                  }
+                }
+              )
+              .catch(error => res.status(401).json({ error }));
+            }
+            })
+            .catch((error) => {
+              res.status(400).json({ error })
+            }
+          )
+        }
+      )}
+    
+  
 
-  const sauceObject = req.file ? {
-    ...JSON.parse(req.body.sauce),
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  } : { ...req.body };
-console.log('modify', req.params.id)
-  Sauce.findOne({
-    _id: req.params.id
-  })
-  .then((sauce) => {
-    console.log('sauce', sauce)
-    if (sauce.userId !== req.auth.userId) {
-      res.status(401).json({ message: 'non autorisée'});
-    } else {
-      Sauce.updateOne(
-          {_id: req.params.id},
-          { ...sauceObject, 
-            _id: req.params.id
-          }
-        )
-      .then(() => res.status(200).json({message : 'Objet modifié!'}))
-      .catch(error => res.status(401).json({ error }));
-    }
-  })
-  .catch((error) => {
-    res.status(400).json({ error })
-  })
-};
+//   const sauceObject = req.file ? {
+//     ...JSON.parse(req.body.sauce),
+//     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+//   } : { ...req.body };
+// console.log('modify', req.params.id)
+//   Sauce.findOne({
+//     _id: req.params.id
+//   })
+//   .then((sauce) => {
+//     console.log('sauce', sauce)
+//     if (sauce.userId !== req.auth.userId) {
+//       res.status(401).json({ message: 'non autorisée'});
+//     } else {
+//       Sauce.updateOne(
+//           {_id: req.params.id},
+//           { ...sauceObject, 
+//             _id: req.params.id
+//           }
+//         )
+//       .then(() => res.status(200).json({message : 'Objet modifié!'}))
+//       .catch(error => res.status(401).json({ error }));
+//     }
+//   })
+//   .catch((error) => {
+//     res.status(400).json({ error })
+//   })
 
 exports.deleteSauce = (req, res, next) => {
+  const sauceId = req.params.id;
   const token = req.headers.authorization.split(' ')[1];
   const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
   const decodedUserId = decodedToken.userId;
 
-  /// faire un findOne comme dans likeaction === 0
-  // dans le then du findOne on met une conditionnelle pour vérifier si le decodedUserId === sauce.userId
-
-if (this.deleteSauce === true) {
-  Sauce.findOne({
-    _id: sauceId
-  }).then(
-    (sauce) => {
-      (decodedUserId === sauce.userId) 
-    }
-  )}
-
-  Sauce.deleteOne({_id: req.params.id}).then(
-    () => {
-      res.status(200).json({
-        message: 'Deleted!'
-      });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-};
+  // on recherche la sauce a supprimer
+  Sauce.findOne({ _id: sauceId })
+    .then((sauce) => {
+      // on vérifie que l'userID dans l'enregistrement correspond a l'userID du token
+      if(sauce.userId === decodedUserId){
+        // si c'est le cas on fait l'opération de suppresion de l'enregistrement
+        Sauce.deleteOne({_id: req.params.id})
+        .then(() => { res.status(200).json({message: 'Deleted!'})})
+        .catch((error) => { res.status(400).json({error: error})});
+      } else {
+        // sinon on envoi un message d'erreur
+        res.status(401).json({message: 'Suppression non autorisé'});
+      }
+  })
+  .catch((error) => {
+    res.status(400).json({ error })
+  }
+)}
 
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const userId = req.body.userId;
   const likeAction = req.body.like;
-  console.log('likeAction', likeAction)
+  // console.log('likeAction', likeAction)
 
   if (likeAction === 1){
     Sauce.updateOne({_id: sauceId}, {
