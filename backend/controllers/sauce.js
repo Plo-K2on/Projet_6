@@ -59,18 +59,15 @@ exports.modifySauce = (req, res, next) => {
       _id: sauceId
     }).then(
       (sauce) => {
-        // if (this.modifySauce === true) {}
-        // (decodedUserId === sauce.userId)
         const sauceObject = req.file ? {
               ...JSON.parse(req.body.sauce),
               imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             } : { ...req.body };
-          // console.log('modify', req.params.id)
             Sauce.findOne({
               _id: req.params.id
             })
             .then((sauce) => {
-              // console.log('sauce', sauce)
+              // voir pour utiliser decodedUserId a la place de req.auth.userId
               if (sauce.userId !== req.auth.userId) {
                 res.status(401).json({ message: 'non autorisée'});
               } else {
@@ -97,35 +94,6 @@ exports.modifySauce = (req, res, next) => {
           )
         }
       )}
-    
-  
-
-//   const sauceObject = req.file ? {
-//     ...JSON.parse(req.body.sauce),
-//     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-//   } : { ...req.body };
-// console.log('modify', req.params.id)
-//   Sauce.findOne({
-//     _id: req.params.id
-//   })
-//   .then((sauce) => {
-//     console.log('sauce', sauce)
-//     if (sauce.userId !== req.auth.userId) {
-//       res.status(401).json({ message: 'non autorisée'});
-//     } else {
-//       Sauce.updateOne(
-//           {_id: req.params.id},
-//           { ...sauceObject, 
-//             _id: req.params.id
-//           }
-//         )
-//       .then(() => res.status(200).json({message : 'Objet modifié!'}))
-//       .catch(error => res.status(401).json({ error }));
-//     }
-//   })
-//   .catch((error) => {
-//     res.status(400).json({ error })
-//   })
 
 exports.deleteSauce = (req, res, next) => {
   const sauceId = req.params.id;
@@ -138,7 +106,7 @@ exports.deleteSauce = (req, res, next) => {
     .then((sauce) => {
       // on vérifie que l'userID dans l'enregistrement correspond a l'userID du token
       if(sauce.userId === decodedUserId){
-        // si c'est le cas on fait l'opération de suppresion de l'enregistrement
+        // si c'est le cas on fait l'opération de suppression de l'enregistrement
         Sauce.deleteOne({_id: req.params.id})
         .then(() => { res.status(200).json({message: 'Deleted!'})})
         .catch((error) => { res.status(400).json({error: error})});
@@ -156,7 +124,6 @@ exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const userId = req.body.userId;
   const likeAction = req.body.like;
-  // console.log('likeAction', likeAction)
 
   if (likeAction === 1){
     Sauce.updateOne({_id: sauceId}, {
