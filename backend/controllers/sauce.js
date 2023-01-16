@@ -55,45 +55,35 @@ exports.modifySauce = (req, res, next) => {
   const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
   const decodedUserId = decodedToken.userId;
 
-    Sauce.findOne({
-      _id: sauceId
-    }).then(
-      (sauce) => {
-        const sauceObject = req.file ? {
-              ...JSON.parse(req.body.sauce),
-              imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-            } : { ...req.body };
-            Sauce.findOne({
+  Sauce.findOne({_id: sauceId})
+  .then((sauce) => {
+      const sauceObject = req.file ? {
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      } :
+      { ...req.body };
+      if (sauce.userId !== decodedUserId) {
+        res.status(401).json({ message: 'non autorisée'});
+      } else {
+
+        if (decodedUserId === sauce.userId){
+          Sauce.updateOne({_id: req.params.id},
+            { ...sauceObject, 
               _id: req.params.id
             })
-            .then((sauce) => {
-              // voir pour utiliser decodedUserId a la place de req.auth.userId
-              if (sauce.userId !== req.auth.userId) {
-                res.status(401).json({ message: 'non autorisée'});
-              } else {
-                Sauce.updateOne(
-                    {_id: req.params.id},
-                    { ...sauceObject, 
-                      _id: req.params.id
-                    }
-                  )
-                .then(() => {
-                  if (this.modifySauce === true){
-                    if (decodedUserId === sauce.userId){
-                      res.status(200).json({message : 'Objet modifié!'})
-                    }
-                  }
-                }
-              )
-              .catch(error => res.status(401).json({ error }));
-            }
+            .then(() => {
+              res.status(200).json({message : 'Objet modifié!'})
             })
-            .catch((error) => {
-              res.status(400).json({ error })
-            }
-          )
+            .catch(error => res.status(401).json({ error }));
+        } else {
+          res.status(401).json({ message : 'Vous ne pouvez pas modifier cette sauce' });
         }
-      )}
+      }
+    })
+    .catch((error) => {
+      res.status(400).json({ error })
+    })
+}
 
 exports.deleteSauce = (req, res, next) => {
   const sauceId = req.params.id;

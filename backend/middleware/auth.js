@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const rateLimit = require('express-rate-limit')
+// const rateLimit = require('express-rate-limit')
  
 module.exports = (req, res, next) => {
    try {
@@ -10,12 +10,12 @@ module.exports = (req, res, next) => {
            userId: userId
        };
 
-        limiter = rateLimit({
-            windowMs: 5 * 60 * 1000,
-            max: 5,
-            standardHeaders: true,
-            legacyHeaders: false,
-        })
+        // limiter = rateLimit({
+        //     windowMs: 2 * 60 * 1000,
+        //     max: 2,
+        //     standardHeaders: true,
+        //     legacyHeaders: false,
+        // })
 
 	next();
    } catch(error) {
