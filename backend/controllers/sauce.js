@@ -1,7 +1,6 @@
 const Sauce = require('../models/sauce.js');
 const jwt = require('jsonwebtoken');
 
-
 exports.allSauces = (req, res, next) => {
   Sauce.find().then(
     (sauces) => {
@@ -52,7 +51,7 @@ exports.getOneSauce = (req, res, next) => {
 exports.modifySauce = (req, res, next) => {
   const sauceId = req.params.id;
   const token = req.headers.authorization.split(' ')[1];
-  const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+  const decodedToken = jwt.verify(token, decodedUserId);
   const decodedUserId = decodedToken.userId;
 
   Sauce.findOne({_id: sauceId})
@@ -88,7 +87,7 @@ exports.modifySauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const token = req.headers.authorization.split(' ')[1];
-  const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+  const decodedToken = jwt.verify(token, decodedUserId);
   const decodedUserId = decodedToken.userId;
 
   // on recherche la sauce a supprimer

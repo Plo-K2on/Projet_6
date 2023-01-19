@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 exports.signup = (req, res, next) => {
@@ -17,6 +17,10 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login  = (req, res, next) => {
+
+    const decodedToken = jwt.verify(token, decodedUserId);
+    const decodedUserId = decodedToken.userId;
+
     User.findOne({email: req.body.email})
         .then(user =>{
             if (user === null) {
@@ -31,7 +35,7 @@ exports.login  = (req, res, next) => {
                             userId: user._id,
                             token: jwt.sign(
                                 { userId : user._id },
-                                'RANDOM_TOKEN_SECRET',
+                                decodedUserId,
                                 { expiresIn: '24h' }
                             )
                         });
@@ -46,5 +50,3 @@ exports.login  = (req, res, next) => {
             res.status(500).json( {error} );
         })
 };
-  
-const jwt = require('jsonwebtoken');
