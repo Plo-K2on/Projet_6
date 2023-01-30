@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// importation des routes
 const userRoutes = require('./routes/user.js');
 const sauceRoutes = require('./routes/sauce.js');
 const path = require('path');
@@ -22,7 +23,7 @@ mongoose.connect(process.env.BDD_URL,
         legacyHeaders: false,
     })
 
-
+// declaration de l'utilisation des routes
 app.use(cors());
 app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
