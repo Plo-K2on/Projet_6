@@ -16,6 +16,7 @@ exports.allSauces = (req, res, next) => {
   );
 };
 
+// Création de la sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
     const sauce = new Sauce({
@@ -33,6 +34,7 @@ exports.createSauce = (req, res, next) => {
     }) 
   };
 
+  // Permer de selectionner une sauce en particulier
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({
     _id: req.params.id
@@ -49,6 +51,7 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 
+// Permet de modifier une sauce
 exports.modifySauce = (req, res, next) => {
   const sauceId = req.params.id;
   const token = req.headers.authorization.split(' ')[1];
@@ -85,6 +88,7 @@ exports.modifySauce = (req, res, next) => {
     })
 }
 
+// Permet de supprimer une sauce
 exports.deleteSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const token = req.headers.authorization.split(' ')[1];
@@ -110,6 +114,7 @@ exports.deleteSauce = (req, res, next) => {
   }
 )}
 
+// Permet de gérer les likes et dislikes des sauces
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const userId = req.body.userId;
